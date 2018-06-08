@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.MsgPicMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.MsgPic">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="minUrl" jdbcType="VARCHAR" property="minurl" />
+		<result column="url" jdbcType="VARCHAR" property="url" />
+		<result column="msgId" jdbcType="VARCHAR" property="msgid" />
+		<result column="releaseTime" jdbcType="TIMESTAMP" property="releasetime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, minUrl, url, msgId, releaseTime
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from msg_pic
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		msg_pic
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insertListSelective" parameterType="java.util.List">
+		insert into msg_pic(id,
+		minUrl, url,
+		msgId, releaseTime)
+		VALUES
+		<foreach collection="msgPicList" item="list" separator=",">
+			(#{list.id},#{list.minurl},#{list.url},#{list.msgid},#{list.releasetime})
+		</foreach>
+	</insert>
+
+	<insert id="insert" parameterType="com.jkc.msg.entity.MsgPic">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_pic (id,
+		minUrl, url,
+		msgId, releaseTime)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{minurl,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{msgid,jdbcType=VARCHAR},
+		#{releasetime,jdbcType=DATE})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.MsgPic">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_pic
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="minurl != null">
+				minUrl,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="msgid != null">
+				msgId,
+			</if>
+			<if test="releasetime != null">
+				releaseTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="minurl != null">
+				#{minurl,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="msgid != null">
+				#{msgid,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				#{releasetime,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.msg.entity.MsgPic">
+		update msg_pic
+		<set>
+			<if test="minurl != null">
+				minUrl = #{minurl,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="msgid != null">
+				msgId = #{msgid,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				releaseTime = #{releasetime,jdbcType=DATE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.msg.entity.MsgPic">
+		update msg_pic
+		set
+		minUrl = #{minurl,jdbcType=VARCHAR},
+		url = #{url,jdbcType=VARCHAR},
+		msgId = #{msgid,jdbcType=VARCHAR},
+		releaseTime =
+		#{releasetime,jdbcType=DATE}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

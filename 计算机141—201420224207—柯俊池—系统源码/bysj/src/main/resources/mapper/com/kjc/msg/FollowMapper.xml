@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.FollowMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.Follow">
+		<result column="initiativeUserID" jdbcType="VARCHAR" property="initiativeUserID" />
+		<result column="passivityUserId" jdbcType="VARCHAR" property="passivityUserId" />
+		<result column="operationTime" jdbcType="TIMESTAMP" property="operationTime" />
+		<result column="initiativeUserType" jdbcType="VARCHAR"
+			property="initiativeUserType" />
+		<result column="passivityUserType" jdbcType="VARCHAR" property="passivityUserType" />
+	</resultMap>
+	<insert id="insert" parameterType="com.jkc.msg.entity.Follow">
+
+		insert into follow
+		(initiativeUserID, passivityUserId,
+		operationTime,
+		initiativeUserType,
+		passivityUserType
+		)
+		values
+		(#{initiativeUserID,jdbcType=VARCHAR},
+		#{passivityUserId,jdbcType=VARCHAR},
+		#{operationTime,jdbcType=TIMESTAMP},
+		#{initiativeUserType,jdbcType=VARCHAR},
+		#{passivityUserType,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.Follow">
+
+		insert into follow
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="initiativeUserID != null">
+				initiativeUserID,
+			</if>
+			<if test="passivityUserId != null">
+				passivityUserId,
+			</if>
+			<if test="operationTime != null">
+				operationTime,
+			</if>
+			<if test="initiativeUserType != null">
+				initiativeUserType,
+			</if>
+			<if test="passivityUserType != null">
+				passivityUserType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="initiativeUserID != null">
+				#{initiativeUserID,jdbcType=VARCHAR},
+			</if>
+			<if test="passivityUserId != null">
+				#{passivityUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="operationTime != null">
+				#{operationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="initiativeUserType != null">
+				#{initiativeUserType,jdbcType=VARCHAR},
+			</if>
+			<if test="passivityUserType != null">
+				#{passivityUserType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectWefollowOnEachOther" resultType="java.util.HashMap">
+		SELECT
+		F.initiativeUserID,
+		F.passivityUserId,
+		F.initiativeUserType,
+		F.passivityUserType
+		FROM
+		follow F
+		WHERE
+		F.initiativeUserID IN
+		(SELECT
+		f.passivityUserId
+		FROM
+		follow f
+		WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR}
+		)
+		AND
+		F.passivityUserId=#{userId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectMyFollow" resultType="java.util.HashMap">
+		SELECT
+		f.passivityUserId,
+		f.passivityUserType
+		FROM follow f
+		WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR}
+	</select>
+	<select id="countMyFollowNumb" resultType="java.lang.Integer">
+		SELECT
+		COUNT(f.passivityUserId)
+		FROM follow f
+		WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectMyFans" resultType="java.util.HashMap">
+		SELECT
+		f.initiativeUserID,f.initiativeUserType
+		FROM
+		follow f
+		WHERE
+		f.passivityUserId=#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="countMyFansNumb" resultType="java.lang.Integer">
+		SELECT
+		COUNT(f.initiativeUserID)
+		FROM
+		follow f
+		WHERE
+		f.passivityUserId=#{userId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="checkIfFollow" resultType="java.util.HashMap">
+		SELECT
+		f.passivityUserId,
+		f.passivityUserType
+		FROM follow f
+		WHERE
+		f.initiativeUserID=#{initiativeUserID,jdbcType=VARCHAR}
+		AND
+		f.passivityUserId=#{passivityUserId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="cancelFollowThisUser">
+		delete from
+		follow
+		where
+		initiativeUserID=#{initiativeUserID,jdbcType=VARCHAR}
+		AND
+		passivityUserId=#{passivityUserId,jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

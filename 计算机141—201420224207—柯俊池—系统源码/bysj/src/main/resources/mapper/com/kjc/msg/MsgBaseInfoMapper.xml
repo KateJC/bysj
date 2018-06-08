@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.MsgBaseInfoMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.MsgBaseInfo">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="userId" jdbcType="VARCHAR" property="userid" />
+		<result column="userType" jdbcType="VARCHAR" property="usertype" />
+		<result column="contentType" jdbcType="VARCHAR" property="contenttype" />
+		<result column="transpondMsgId" jdbcType="VARCHAR" property="transpondmsgid" />
+		<result column="releaseTime" jdbcType="TIMESTAMP" property="releasetime" />
+		<result column="privilege" jdbcType="VARCHAR" property="privilege" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.jkc.msg.entity.MsgBaseInfo">
+		<result column="content" jdbcType="LONGVARCHAR" property="content" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, userId, userType, contentType, transpondMsgId,
+		releaseTime, privilege
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from msg_baseinfo
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="countMyMsgNumb" resultType="java.lang.Integer">
+		select
+		COUNT(id)
+		from
+		msg_baseinfo
+		where
+		userId =
+		#{userId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		msg_baseinfo
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.jkc.msg.entity.MsgBaseInfo">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_baseinfo (id,
+		userId, userType,
+		contentType,
+		transpondMsgId, releaseTime,
+		privilege,
+		content)
+		values
+		(#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR},
+		#{usertype,jdbcType=VARCHAR},
+		#{contenttype,jdbcType=VARCHAR},
+		#{transpondmsgid,jdbcType=VARCHAR},
+		#{releasetime,jdbcType=TIMESTAMP},
+		#{privilege,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.MsgBaseInfo">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_baseinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userid != null">
+				userId,
+			</if>
+			<if test="usertype != null">
+				userType,
+			</if>
+			<if test="contenttype != null">
+				contentType,
+			</if>
+			<if test="transpondmsgid != null">
+				transpondMsgId,
+			</if>
+			<if test="releasetime != null">
+				releaseTime,
+			</if>
+			<if test="privilege != null">
+				privilege,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="usertype != null">
+				#{usertype,jdbcType=VARCHAR},
+			</if>
+			<if test="contenttype != null">
+				#{contenttype,jdbcType=VARCHAR},
+			</if>
+			<if test="transpondmsgid != null">
+				#{transpondmsgid,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				#{releasetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="privilege != null">
+				#{privilege,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.msg.entity.MsgBaseInfo">
+		update msg_baseinfo
+		<set>
+			<if test="userid != null">
+				userId = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="usertype != null">
+				userType = #{usertype,jdbcType=VARCHAR},
+			</if>
+			<if test="contenttype != null">
+				contentType = #{contenttype,jdbcType=VARCHAR},
+			</if>
+			<if test="transpondmsgid != null">
+				transpondMsgId = #{transpondmsgid,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				releaseTime = #{releasetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="privilege != null">
+				privilege = #{privilege,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jkc.msg.entity.MsgBaseInfo">
+		update
+		msg_baseinfo
+		set userId = #{userid,jdbcType=VARCHAR},
+		userType =
+		#{usertype,jdbcType=VARCHAR},
+		contentType =
+		#{contenttype,jdbcType=VARCHAR},
+		transpondMsgId =
+		#{transpondmsgid,jdbcType=VARCHAR},
+		releaseTime =
+		#{releasetime,jdbcType=TIMESTAMP},
+		privilege =
+		#{privilege,jdbcType=VARCHAR},
+		content =
+		#{content,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.msg.entity.MsgBaseInfo">
+		update
+		msg_baseinfo
+		set userId = #{userid,jdbcType=VARCHAR},
+		userType =
+		#{usertype,jdbcType=VARCHAR},
+		contentType =
+		#{contenttype,jdbcType=VARCHAR},
+		transpondMsgId =
+		#{transpondmsgid,jdbcType=VARCHAR},
+		releaseTime =
+		#{releasetime,jdbcType=TIMESTAMP},
+		privilege =
+		#{privilege,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

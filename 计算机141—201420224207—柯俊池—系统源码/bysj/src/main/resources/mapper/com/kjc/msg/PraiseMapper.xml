@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.PraiseMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.Praise">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="praiseUserId" jdbcType="VARCHAR" property="praiseUserId" />
+		<result column="praiseType" jdbcType="VARCHAR" property="praiseType" />
+		<result column="praiseId" jdbcType="VARCHAR" property="praiseId" />
+		<result column="praiseTime" jdbcType="TIMESTAMP" property="praiseTime" />
+		<result column="praiseUserType" jdbcType="VARCHAR" property="praiseUserType" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, praiseUserId, praiseType, praiseId, praiseTime,
+		praiseUserType
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from praise
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from praise
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.jkc.msg.entity.Praise">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into praise (id,
+		praiseUserId, praiseType,
+		praiseId, praiseTime,
+		praiseUserType
+		)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{praiseUserId,jdbcType=VARCHAR},
+		#{praiseType,jdbcType=VARCHAR},
+		#{praiseId,jdbcType=VARCHAR},
+		#{praiseTime,jdbcType=TIMESTAMP},
+		#{praiseUserType,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.Praise">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into praise
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="praiseUserId != null">
+				praiseUserId,
+			</if>
+			<if test="praiseType != null">
+				praiseType,
+			</if>
+			<if test="praiseId != null">
+				praiseId,
+			</if>
+			<if test="praiseTime != null">
+				praiseTime,
+			</if>
+			<if test="praiseUserType != null">
+				praiseUserType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseUserId != null">
+				#{praiseUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseType != null">
+				#{praiseType,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseId != null">
+				#{praiseId,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseTime != null">
+				#{praiseTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="praiseUserType != null">
+				#{praiseUserType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.msg.entity.Praise">
+		update praise
+		<set>
+			<if test="praiseUserId != null">
+				praiseUserId = #{praiseUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseType != null">
+				praiseType = #{praiseType,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseId != null">
+				praiseId = #{praiseId,jdbcType=VARCHAR},
+			</if>
+			<if test="praiseTime != null">
+				praiseTime = #{praiseTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="praiseUserType != null">
+				praiseUserType = #{praiseUserType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.msg.entity.Praise">
+		update praise
+		set
+		praiseUserId = #{praiseUserId,jdbcType=VARCHAR},
+		praiseType =
+		#{praiseType,jdbcType=VARCHAR},
+		praiseId =
+		#{praiseId,jdbcType=VARCHAR},
+		praiseTime =
+		#{praiseTime,jdbcType=TIMESTAMP},
+		praiseUserType =
+		#{praiseUserType,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

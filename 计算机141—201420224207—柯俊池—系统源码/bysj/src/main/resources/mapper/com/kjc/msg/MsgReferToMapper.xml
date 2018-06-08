@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.MsgReferToMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.MsgReferTo">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="msgId" jdbcType="VARCHAR" property="msgid" />
+		<result column="UserId" jdbcType="VARCHAR" property="userid" />
+		<result column="userType" jdbcType="VARCHAR" property="usertype" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="releaseTime" jdbcType="TIMESTAMP" property="releasetime" />
+		<result column="referType" jdbcType="VARCHAR" property="refertype" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, msgId, UserId, userType, status, releaseTime, referType
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from msg_referto
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		msg_referto
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.jkc.msg.entity.MsgReferTo">
+		insert into msg_referto (id,
+		msgId, UserId,
+		userType, status, releaseTime,
+		referType)
+		values
+		(#{id,jdbcType=VARCHAR}, #{msgid,jdbcType=VARCHAR},
+		#{userid,jdbcType=VARCHAR},
+		#{usertype,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR}, #{releasetime,jdbcType=DATE},
+		#{refertype,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.MsgReferTo">
+		insert into msg_referto
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="msgid != null">
+				msgId,
+			</if>
+			<if test="userid != null">
+				UserId,
+			</if>
+			<if test="usertype != null">
+				userType,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="releasetime != null">
+				releaseTime,
+			</if>
+			<if test="refertype != null">
+				referType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="msgid != null">
+				#{msgid,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="usertype != null">
+				#{usertype,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				#{releasetime,jdbcType=DATE},
+			</if>
+			<if test="refertype != null">
+				#{refertype,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.msg.entity.MsgReferTo">
+		update msg_referto
+		<set>
+			<if test="msgid != null">
+				msgId = #{msgid,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				UserId = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="usertype != null">
+				userType = #{usertype,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="releasetime != null">
+				releaseTime = #{releasetime,jdbcType=DATE},
+			</if>
+			<if test="refertype != null">
+				referType = #{refertype,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.msg.entity.MsgReferTo">
+		update msg_referto
+		set msgId = #{msgid,jdbcType=VARCHAR},
+		UserId =
+		#{userid,jdbcType=VARCHAR},
+		userType = #{usertype,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR},
+		releaseTime =
+		#{releasetime,jdbcType=DATE},
+		referType = #{refertype,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

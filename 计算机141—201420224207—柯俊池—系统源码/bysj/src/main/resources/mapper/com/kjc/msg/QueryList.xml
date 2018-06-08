@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.MsgQueryMapper">
+	<select id="getMsgByid" resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE mb.id=#{id,jdbcType=VARCHAR}
+	</select>
+	<select id="queryAllMsgListPublic" parameterType="int"
+		resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE
+		mb.privilege='public'
+		ORDER BY
+		(
+		(SELECT COUNT(mp.id) FROM praise mp WHERE
+		mp.praiseId=mb.id)*0.4+
+		(SELECT COUNT(mc.id) FROM msg_comment mc WHERE
+		mc.msgId=mb.id)*0.4+
+		(SELECT COUNT(t.id) FROM msg_baseinfo t WHERE
+		t.transpondMsgId=mb.id)*0.2
+		) DESC,mb.releaseTime DESC
+		limit
+		#{from},#{size}
+	</select>
+	<select id="queryAllMsgListPublicTotal" resultType="java.lang.Integer">
+		SELECT
+		COUNT(mb.id)
+		FROM
+		msg_baseinfo mb
+		WHERE
+		mb.privilege='public'
+	</select>
+
+	<select id="queryMyFollowMsgListPublic" resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE
+		mb.privilege='public'
+		AND
+		(
+		mb.userId IN (SELECT
+		f.passivityUserId FROM
+		follow f WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR})
+		OR
+		mb.userId=#{userId,jdbcType=VARCHAR}
+		)
+		ORDER BY
+		mb.releaseTime
+		DESC
+		limit
+		#{from},#{size}
+	</select>
+	<select id="queryMyFollowMsgListPublicTotal" resultType="java.lang.Integer">
+		SELECT
+		COUNT(mb.id)
+		FROM
+		msg_baseinfo mb
+		WHERE
+		mb.privilege='public'
+		AND
+		(
+		mb.userId IN (SELECT
+		f.passivityUserId FROM
+		follow f WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR})
+		OR
+		mb.userId=#{userId,jdbcType=VARCHAR}
+		)
+	</select>
+	<select id="queryMySchoolMsgListPublic" resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE
+		(
+		mb.userId IN
+		(SELECT id FROM
+		user_official_baseinfo WHERE
+		school_id=#{schoolId,jdbcType=VARCHAR} )
+		OR
+		mb.userId IN
+		(SELECT id FROM user_student_baseinfo WHERE
+		school_id=#{schoolId,jdbcType=VARCHAR} )
+		)
+		AND
+		mb.privilege='public'
+		ORDER
+		BY
+		mb.releaseTime
+		DESC
+		limit
+		#{from},#{size}
+	</select>
+
+	<select id="queryMySchoolMsgListPublicTotal" resultType="java.lang.Integer">
+		SELECT
+		COUNT(mb.id)
+		FROM
+		msg_baseinfo mb
+		WHERE
+		(
+		mb.userId IN
+		(SELECT id FROM
+		user_official_baseinfo WHERE
+		school_id=#{schoolId,jdbcType=VARCHAR} )
+		OR
+		mb.userId IN
+		(SELECT id FROM user_student_baseinfo WHERE
+		school_id=#{schoolId,jdbcType=VARCHAR} )
+		)
+		AND
+		mb.privilege='public'
+	</select>
+
+	<select id="queryMyFriendMsgListPublic" resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE
+		(
+		mb.userId IN
+		(SELECT F.initiativeUserID FROM
+		follow F WHERE F.initiativeUserID IN
+		(SELECT
+		f.passivityUserId FROM
+		follow f WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR})
+		AND
+		F.passivityUserId=#{userId,jdbcType=VARCHAR})
+		OR
+		mb.userId=#{userId,jdbcType=VARCHAR}
+		)
+		AND
+		mb.privilege='public'
+		ORDER
+		BY
+		mb.releaseTime
+		DESC
+		limit
+		#{from},#{size}
+	</select>
+
+	<select id="queryMyFriendMsgListPublicTotal" resultType="java.lang.Integer">
+		SELECT
+		COUNT(mb.id)
+		FROM
+		msg_baseinfo mb
+		WHERE
+		(
+		mb.userId IN
+		(SELECT
+		F.initiativeUserID FROM
+		follow F WHERE F.initiativeUserID IN
+		(SELECT
+		f.passivityUserId FROM
+		follow f WHERE
+		f.initiativeUserID=#{userId,jdbcType=VARCHAR})
+		AND
+		F.passivityUserId=#{userId,jdbcType=VARCHAR})
+		OR
+		mb.userId=#{userId,jdbcType=VARCHAR}
+		)
+		AND
+		mb.privilege='public'
+	</select>
+
+
+	<select id="queryMyPraiseMsgList">
+		SELECT
+		m.*
+		FROM msg_baseinfo m
+		WHERE m.id IN
+		( SELECT
+		p.praiseId FROM praise p WHERE
+		p.praiseUserId=#{userId,jdbcType=VARCHAR}
+		AND
+		p.praiseType='msg')
+		ORDER
+		BY m.releaseTime DESC
+		limit
+		#{from},#{size}
+	</select>
+
+	<select id="queryMyPraiseMsgListTotal" resultType="java.lang.Integer">
+		SELECT
+		COUNT(m.id)
+		FROM msg_baseinfo m
+		WHERE m.id IN
+		( SELECT
+		p.praiseId FROM
+		praise p
+		WHERE
+		p.praiseUserId=#{userId,jdbcType=VARCHAR}
+		AND
+		p.praiseType='msg')
+	</select>
+	<select id="queryPicByMsgId" resultType="java.util.HashMap">
+		SELECT
+		mp.id,mp.minUrl,mp.url,mp.msgId
+		FROM msg_pic mp
+		WHERE
+		mp.msgId=#{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryMsgPraiseAmount" resultType="java.lang.Integer">
+		SELECT
+		COUNT(p.id)
+		FROM praise p
+		WHERE
+		p.praiseId=#{praiseId,jdbcType=VARCHAR}
+		AND
+		p.praiseType=#{praiseType,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryMsgCommentAmount" resultType="java.lang.Integer">
+	<!-- 	SELECT
+		COUNT(DISTINCT(mc.id) )+COUNT(DISTINCT(mr.id)) FROM msg_reply
+		mr,msg_comment mc
+		WHERE mr.msgCommentId=mc.id AND
+		mc.msgId -->
+		
+        SELECT
+		COUNT(DISTINCT(mc.id))+COUNT(DISTINCT(mr.id)) FROM msg_reply
+		mr,msg_comment mc
+		WHERE mr.msgCommentId IN(SELECT t.id  FROM msg_comment t WHERE t.msgId=#{msgId,jdbcType=VARCHAR}) AND mc.msgId=#{msgId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="loadCommentOfMsg" resultType="java.util.HashMap">
+		SELECT
+		mc.id,mc.msgId,mc.userId,mc.userType,mc.releaseTime,mc.content
+		FROM
+		msg_comment mc
+		WHERE mc.msgId=#{msgId,jdbcType=VARCHAR}
+		ORDER BY
+		mc.releaseTime
+		DESC
+	</select>
+	<select id="loadReplyOfComment" resultType="java.util.HashMap">
+		SELECT
+		mr.id,
+		mr.msgCommentId,
+		mr.replyContent,
+		mr.replyId,
+		mr.replyTargetUserId,
+		mr.replyTargetUserType,
+		mr.replyTime,
+		mr.replyType,
+		mr.replyUserId,
+		mr.replyUserType
+		FROM msg_reply mr
+		WHERE
+		mr.msgCommentId=#{msgCommentId,jdbcType=VARCHAR}
+		ORDER BY
+		mr.replyTime
+		DESC
+	</select>
+
+	<select id="searchMsg" resultType="java.util.HashMap">
+		SELECT mb.* FROM msg_baseinfo
+		mb
+		WHERE mb.content LIKE '%${value}%'
+		and mb.privilege='public'
+		ORDER BY
+		(
+		(SELECT COUNT(mp.id) FROM praise mp
+		WHERE mp.praiseId=mb.id)*0.4+
+		(SELECT COUNT(mc.id) FROM msg_comment mc
+		WHERE mc.msgId=mb.id)*0.4+
+		(SELECT COUNT(t.id) FROM msg_baseinfo t
+		WHERE
+		t.transpondMsgId=mb.id)*0.2) DESC,mb.releaseTime DESC
+	</select>
+
+	<select id="loadMyMsgList" resultType="java.util.HashMap">
+		SELECT
+		mb.*
+		FROM
+		msg_baseinfo mb
+		WHERE
+		mb.userId=#{id,jdbcType=VARCHAR}
+		ORDER BY
+		mb.releaseTime
+		DESC
+	</select>
+
+</mapper>

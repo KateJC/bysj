@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.loginAndRegister.dao.UserStudentMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.loginAndRegister.entity.UserStudent">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
+		<result column="real_name" jdbcType="VARCHAR" property="realName" />
+		<result column="identity_card" jdbcType="VARCHAR" property="identityCard" />
+		<result column="student_number" jdbcType="VARCHAR" property="studentNumber" />
+		<result column="school_id" jdbcType="VARCHAR" property="schoolId" />
+		<result column="student_class" jdbcType="VARCHAR" property="studentClass" />
+		<result column="student_major" jdbcType="VARCHAR" property="studentMajor" />
+		<result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="account_picture" jdbcType="VARCHAR" property="accountPicture" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		s.id, s.phone, s.password, s.nickname, s.real_name,
+		s.identity_card,
+		s.student_number,
+		s.school_id,
+		s.student_class,
+		s.student_major, s.creat_time,
+		s.update_time, s.account_picture,
+		s.status,o.name AS schoolname
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultType="java.util.HashMap">	<!-- resultMap="BaseResultMap" -->
+		select
+		<include refid="Base_Column_List" />
+		from user_student_baseinfo s,school o
+		where s.school_id=o.id and s.id =
+		#{id,jdbcType=VARCHAR}
+	</select>
+	<select id="login" resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_student_baseinfo s,school o
+		where s.school_id=o.id
+		and
+		s.school_id=#{schoolId,jdbcType=VARCHAR}
+		and
+		s.phone=#{phone,jdbcType=VARCHAR}
+		and
+		s.password=#{password,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectBySchoolIdAndPhone" resultType="java.lang.String">
+		SELECT id FROM
+		user_student_baseinfo
+		WHERE school_id=#{schoolId,jdbcType=VARCHAR}
+		AND
+		phone=#{phone,jdbcType=VARCHAR}
+
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		user_student_baseinfo
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.jkc.loginAndRegister.entity.UserStudent">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into
+		user_student_baseinfo (id, phone, password,
+		nickname,
+		real_name,
+		identity_card,
+		student_number, school_id, student_class,
+		student_major,
+		creat_time, update_time,
+		account_picture, status)
+		values
+		(#{id,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR},
+		#{realName,jdbcType=VARCHAR}, #{identityCard,jdbcType=VARCHAR},
+		#{studentNumber,jdbcType=VARCHAR}, #{schoolId,jdbcType=VARCHAR},
+		#{studentClass,jdbcType=VARCHAR},
+		#{studentMajor,jdbcType=VARCHAR},
+		#{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+		#{accountPicture,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.loginAndRegister.entity.UserStudent">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into user_student_baseinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="nickname != null">
+				nickname,
+			</if>
+			<if test="realName != null">
+				real_name,
+			</if>
+			<if test="identityCard != null">
+				identity_card,
+			</if>
+			<if test="studentNumber != null">
+				student_number,
+			</if>
+			<if test="schoolId != null">
+				school_id,
+			</if>
+			<if test="studentClass != null">
+				student_class,
+			</if>
+			<if test="studentMajor != null">
+				student_major,
+			</if>
+			<if test="creatTime != null">
+				creat_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="accountPicture != null">
+				account_picture,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="identityCard != null">
+				#{identityCard,jdbcType=VARCHAR},
+			</if>
+			<if test="studentNumber != null">
+				#{studentNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="schoolId != null">
+				#{schoolId,jdbcType=VARCHAR},
+			</if>
+			<if test="studentClass != null">
+				#{studentClass,jdbcType=VARCHAR},
+			</if>
+			<if test="studentMajor != null">
+				#{studentMajor,jdbcType=VARCHAR},
+			</if>
+			<if test="creatTime != null">
+				#{creatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="accountPicture != null">
+				#{accountPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.loginAndRegister.entity.UserStudent">
+		update user_student_baseinfo
+		<set>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				real_name = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="identityCard != null">
+				identity_card = #{identityCard,jdbcType=VARCHAR},
+			</if>
+			<if test="studentNumber != null">
+				student_number = #{studentNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="schoolId != null">
+				school_id = #{schoolId,jdbcType=VARCHAR},
+			</if>
+			<if test="studentClass != null">
+				student_class = #{studentClass,jdbcType=VARCHAR},
+			</if>
+			<if test="studentMajor != null">
+				student_major = #{studentMajor,jdbcType=VARCHAR},
+			</if>
+			<if test="creatTime != null">
+				creat_time = #{creatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="accountPicture != null">
+				account_picture = #{accountPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.loginAndRegister.entity.UserStudent">
+		update
+		user_student_baseinfo
+		set phone = #{phone,jdbcType=VARCHAR},
+		password =
+		#{password,jdbcType=VARCHAR},
+		nickname = #{nickname,jdbcType=VARCHAR},
+		real_name = #{realName,jdbcType=VARCHAR},
+		identity_card =
+		#{identityCard,jdbcType=VARCHAR},
+		student_number =
+		#{studentNumber,jdbcType=VARCHAR},
+		school_id =
+		#{schoolId,jdbcType=VARCHAR},
+		student_class =
+		#{studentClass,jdbcType=VARCHAR},
+		student_major =
+		#{studentMajor,jdbcType=VARCHAR},
+		creat_time =
+		#{creatTime,jdbcType=TIMESTAMP},
+		update_time =
+		#{updateTime,jdbcType=TIMESTAMP},
+		account_picture =
+		#{accountPicture,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateHead" parameterType="java.lang.String">
+		update user_student_baseinfo set account_picture =#{path,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

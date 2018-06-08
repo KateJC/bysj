@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.loginAndRegister.dao.UserOfficialMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.loginAndRegister.entity.UserOfficial">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
+		<result column="school_id" jdbcType="VARCHAR" property="schoolId" />
+		<result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+		<result column="updata_time" jdbcType="TIMESTAMP" property="updataTime" />
+		<result column="brief_introduction" jdbcType="VARCHAR"
+			property="briefIntroduction" />
+		<result column="user_type" jdbcType="VARCHAR" property="userType" />
+		<result column="account_picture" jdbcType="VARCHAR" property="accountPicture" />
+		<result column="admin_type" jdbcType="VARCHAR" property="adminType" />
+		<result column="club_name" jdbcType="VARCHAR" property="clubName" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		o.id, o.phone, o.password, o.nickname, o.school_id,
+		o.creat_time,
+		o.updata_time,
+		o.brief_introduction,
+		o.user_type,
+		o.account_picture, o.admin_type,
+		o.club_name, o.status,s.name AS
+		schoolname
+	</sql>
+	<select id="selectBySchoolIdAndPhoneAndClub" resultType="java.lang.String">
+		SELECT
+		id FROM
+		user_official_baseinfo
+		WHERE
+		school_id=#{schoolId,jdbcType=VARCHAR}
+		AND
+		phone=#{phone,jdbcType=VARCHAR}
+		AND
+		club_name=#{club,jdbcType=VARCHAR}
+	</select>
+	<select id="selectBySchoolIdAndPhone" resultType="java.lang.String">
+		SELECT id FROM
+		user_official_baseinfo
+		WHERE school_id=#{schoolId,jdbcType=VARCHAR}
+		AND
+		phone=#{phone,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultType="java.util.HashMap">
+		<!-- resultMap="BaseResultMap" -->
+		select
+		<include refid="Base_Column_List" />
+		from user_official_baseinfo o ,school s
+		where o.school_id=s.id and
+		o.id=#{id,jdbcType=VARCHAR}
+	</select>
+	<select id="loginClub" resultType="java.util.HashMap">
+		<!-- resultMap="BaseResultMap" -->
+		select
+		<include refid="Base_Column_List" />
+		from user_official_baseinfo o ,school s
+		where o.school_id=s.id
+		and
+		o.id=#{id,jdbcType=VARCHAR}
+		and
+		o.school_id=#{schoolId,jdbcType=VARCHAR}
+		and
+		o.phone=#{phone,jdbcType=VARCHAR}
+		and
+		o.password=#{password,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectClubListByschoolId" resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_official_baseinfo o ,school s
+		where o.school_id=s.id and
+		o.user_type='club' and
+		o.school_id=#{schoolId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="loginSchool" resultType="java.util.HashMap">
+		<!-- resultMap="BaseResultMap" -->
+		select
+		<include refid="Base_Column_List" />
+		from user_official_baseinfo o ,school s
+		where o.school_id=s.id
+		and
+		o.school_id=#{schoolId,jdbcType=VARCHAR}
+		and
+		o.phone=#{phone,jdbcType=VARCHAR}
+		and
+		o.password=#{password,jdbcType=VARCHAR}
+		and
+		o.user_type='school'
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		user_official_baseinfo
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.jkc.loginAndRegister.entity.UserOfficial">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into
+		user_official_baseinfo (id, phone, password,
+		nickname,
+		school_id,
+		creat_time,
+		updata_time, brief_introduction, user_type,
+		account_picture, admin_type, club_name,status)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR},
+		#{schoolId,jdbcType=VARCHAR},
+		#{creatTime,jdbcType=TIMESTAMP},
+		#{updataTime,jdbcType=TIMESTAMP},
+		#{briefIntroduction,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR},
+		#{accountPicture,jdbcType=VARCHAR}, #{adminType,jdbcType=VARCHAR},
+		#{clubName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.loginAndRegister.entity.UserOfficial">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into user_official_baseinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="nickname != null">
+				nickname,
+			</if>
+			<if test="schoolId != null">
+				school_id,
+			</if>
+			<if test="creatTime != null">
+				creat_time,
+			</if>
+			<if test="updataTime != null">
+				updata_time,
+			</if>
+			<if test="briefIntroduction != null">
+				brief_introduction,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="accountPicture != null">
+				account_picture,
+			</if>
+			<if test="adminType != null">
+				admin_type,
+			</if>
+			<if test="clubName != null">
+				club_name,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="schoolId != null">
+				#{schoolId,jdbcType=VARCHAR},
+			</if>
+			<if test="creatTime != null">
+				#{creatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updataTime != null">
+				#{updataTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="briefIntroduction != null">
+				#{briefIntroduction,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="accountPicture != null">
+				#{accountPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="adminType != null">
+				#{adminType,jdbcType=VARCHAR},
+			</if>
+			<if test="clubName != null">
+				#{clubName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.jkc.loginAndRegister.entity.UserOfficial">
+		update user_official_baseinfo
+		<set>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				nickname = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="schoolId != null">
+				school_id = #{schoolId,jdbcType=VARCHAR},
+			</if>
+			<if test="creatTime != null">
+				creat_time = #{creatTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updataTime != null">
+				updata_time = #{updataTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="briefIntroduction != null">
+				brief_introduction =
+				#{briefIntroduction,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="accountPicture != null">
+				account_picture = #{accountPicture,jdbcType=VARCHAR},
+			</if>
+			<if test="adminType != null">
+				admin_type = #{adminType,jdbcType=VARCHAR},
+			</if>
+			<if test="clubName != null">
+				club_name = #{clubName,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.jkc.loginAndRegister.entity.UserOfficial">
+		update
+		user_official_baseinfo
+		set phone = #{phone,jdbcType=VARCHAR},
+		password =
+		#{password,jdbcType=VARCHAR},
+		nickname = #{nickname,jdbcType=VARCHAR},
+		school_id = #{schoolId,jdbcType=VARCHAR},
+		creat_time =
+		#{creatTime,jdbcType=TIMESTAMP},
+		updata_time =
+		#{updataTime,jdbcType=TIMESTAMP},
+		brief_introduction =
+		#{briefIntroduction,jdbcType=VARCHAR},
+		user_type =
+		#{userType,jdbcType=VARCHAR},
+		account_picture =
+		#{accountPicture,jdbcType=VARCHAR},
+		admin_type =
+		#{adminType,jdbcType=VARCHAR},
+		club_name =
+		#{clubName,jdbcType=VARCHAR},
+		status = #{status,jdbcType=VARCHAR}
+		where
+		id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

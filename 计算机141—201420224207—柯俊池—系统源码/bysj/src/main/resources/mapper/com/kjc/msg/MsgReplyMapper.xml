@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.msg.dao.MsgReplyMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.msg.entity.MsgReply">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="msgCommentId" jdbcType="VARCHAR" property="msgCommentId" />
+		<result column="replyType" jdbcType="VARCHAR" property="replyType" />
+		<result column="replyId" jdbcType="VARCHAR" property="replyId" />
+		<result column="replyTargetUserId" jdbcType="VARCHAR" property="replyTargetUserId" />
+		<result column="replyUserId" jdbcType="VARCHAR" property="replyUserId" />
+		<result column="replyContent" jdbcType="VARCHAR" property="replyContent" />
+		<result column="replyTime" jdbcType="TIMESTAMP" property="replyTime" />
+		<result column="replyUserType" jdbcType="VARCHAR" property="replyUserType" />
+		<result column="replyTargetUserType" jdbcType="VARCHAR"
+			property="replyTargetUserType" />
+	</resultMap>
+	<insert id="insert" parameterType="com.jkc.msg.entity.MsgReply">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_reply (id,
+		msgCommentId, replyType,
+		replyId,
+		replyTargetUserId, replyUserId,
+		replyContent, replyTime, replyUserType,
+		replyTargetUserType)
+		values
+		(#{id,jdbcType=VARCHAR},
+		#{msgCommentId,jdbcType=VARCHAR},
+		#{replyType,jdbcType=VARCHAR},
+		#{replyId,jdbcType=VARCHAR},
+		#{replyTargetUserId,jdbcType=VARCHAR},
+		#{replyUserId,jdbcType=VARCHAR},
+		#{replyContent,jdbcType=VARCHAR},
+		#{replyTime,jdbcType=TIMESTAMP}, #{replyUserType,jdbcType=VARCHAR},
+		#{replyTargetUserType,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.msg.entity.MsgReply">
+		<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+			select UUID()
+		</selectKey>
+		insert into msg_reply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="msgCommentId != null">
+				msgCommentId,
+			</if>
+			<if test="replyType != null">
+				replyType,
+			</if>
+			<if test="replyId != null">
+				replyId,
+			</if>
+			<if test="replyTargetUserId != null">
+				replyTargetUserId,
+			</if>
+			<if test="replyUserId != null">
+				replyUserId,
+			</if>
+			<if test="replyContent != null">
+				replyContent,
+			</if>
+			<if test="replyTime != null">
+				replyTime,
+			</if>
+			<if test="replyUserType != null">
+				replyUserType,
+			</if>
+			<if test="replyTargetUserType != null">
+				replyTargetUserType,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="msgCommentId != null">
+				#{msgCommentId,jdbcType=VARCHAR},
+			</if>
+			<if test="replyType != null">
+				#{replyType,jdbcType=VARCHAR},
+			</if>
+			<if test="replyId != null">
+				#{replyId,jdbcType=VARCHAR},
+			</if>
+			<if test="replyTargetUserId != null">
+				#{replyTargetUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="replyUserId != null">
+				#{replyUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="replyContent != null">
+				#{replyContent,jdbcType=VARCHAR},
+			</if>
+			<if test="replyTime != null">
+				#{replyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="replyUserType != null">
+				#{replyUserType,jdbcType=VARCHAR},
+			</if>
+			<if test="replyTargetUserType != null">
+				#{replyTargetUserType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		msg_reply
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+</mapper>

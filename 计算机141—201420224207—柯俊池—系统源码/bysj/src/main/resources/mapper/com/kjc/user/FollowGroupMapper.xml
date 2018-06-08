@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jkc.user.dao.FollowGroupMapper">
+	<resultMap id="BaseResultMap" type="com.jkc.user.entity.FollowGroup">
+		<result column="groupId" jdbcType="VARCHAR" property="groupId" />
+		<result column="userId" jdbcType="VARCHAR" property="userId" />
+		<result column="followUserId" jdbcType="VARCHAR" property="followUserId" />
+	</resultMap>
+	<insert id="insert" parameterType="com.jkc.user.entity.FollowGroup">
+		insert into followgroup
+		(groupId, userId, followUserId
+		)
+		values (#{groupId,jdbcType=VARCHAR},
+		#{userId,jdbcType=VARCHAR},
+		#{followUserId,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.jkc.user.entity.FollowGroup">
+		insert into followgroup
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="groupId != null">
+				groupId,
+			</if>
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="followUserId != null">
+				followUserId,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="groupId != null">
+				#{groupId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="followUserId != null">
+				#{followUserId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>
